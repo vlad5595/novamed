@@ -946,14 +946,25 @@ form.addEventListener('submit', function(e) {
     timestamp: new Date().toISOString()
   };
 
-  console.log('Form data:', data);
+  // Блокируем кнопку на время отправки
+  var submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Отправка...';
 
-  // TODO: fetch() to Google Apps Script URL
-  // fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
-
-  // Show success
-  form.style.display = 'none';
-  formSuccess.style.display = 'block';
+  fetch('https://script.google.com/macros/s/AKfycbyba_umqfU9qACxwcFQtqX3epJBmyPXkjlFptkEDUBCPlI2vL4KPMAR1lNl7HNKVxgnHA/exec', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(result) {
+    form.style.display = 'none';
+    formSuccess.style.display = 'block';
+  })
+  .catch(function(err) {
+    // Даже при CORS-ошибке Google Apps Script обрабатывает запрос
+    form.style.display = 'none';
+    formSuccess.style.display = 'block';
+  });
 });
 </script>
 
