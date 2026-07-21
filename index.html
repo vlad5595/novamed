@@ -958,15 +958,35 @@ form.addEventListener('submit', function(e) {
     + '&direction=' + encodeURIComponent(data.direction)
     + '&comment=' + encodeURIComponent(data.comment);
 
-  fetch(scriptUrl + params, { mode: 'no-cors' })
-  .then(function() {
-    form.style.display = 'none';
-    formSuccess.style.display = 'block';
-  })
-  .catch(function() {
-    form.style.display = 'none';
-    formSuccess.style.display = 'block';
+  // Отправка через скрытый iframe — обходит CORS полностью
+  var iframe = document.createElement('iframe');
+  iframe.name = 'form-submit-iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  var tempForm = document.createElement('form');
+  tempForm.method = 'GET';
+  tempForm.action = scriptUrl;
+  tempForm.target = 'form-submit-iframe';
+
+  ['name', 'phone', 'email', 'direction', 'comment'].forEach(function(key) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = data[key] || '';
+    tempForm.appendChild(input);
   });
+
+  document.body.appendChild(tempForm);
+  tempForm.submit();
+
+  // Показываем успех через 2 секунды (iframe не даёт обратной связи)
+  setTimeout(function() {
+    form.style.display = 'none';
+    formSuccess.style.display = 'block';
+    document.body.removeChild(tempForm);
+    document.body.removeChild(iframe);
+  }, 2000);
 });
 </script>
 
