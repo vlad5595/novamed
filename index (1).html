@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>НоваМед — частная клиника</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #FDFBF7;
+  --primary: #2A5F52;
+  --primary-dark: #1E4A3F;
+  --primary-light: #EBF3F0;
+  --accent: #C49A6C;
+  --accent-light: #F5EDE3;
+  --text: #1E1E1E;
+  --text-muted: #6B7280;
+  --white: #FFFFFF;
+  --card-shadow: 0 4px 24px rgba(42, 95, 82, 0.07);
+  --card-shadow-hover: 0 8px 32px rgba(42, 95, 82, 0.12);
+  --radius: 18px;
+  --radius-sm: 12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Typography ── */
+h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 12px; }
+h3 { font-size: 1.2rem; }
+
+.section-eyebrow {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 540px;
+  line-height: 1.7;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding: 80px 0;
+}
+
+/* ── Header ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(253, 251, 247, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(42, 95, 82, 0.06);
+  transition: box-shadow 0.3s;
+}
+
+.header.scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--primary);
+}
+
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+nav { display: flex; align-items: center; gap: 32px; }
+
+nav a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+nav a:hover { color: var(--primary); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(42, 95, 82, 0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-header { padding: 10px 22px; font-size: 0.85rem; }
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.burger span {
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 160px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(42, 95, 82, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(196, 154, 108, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+
+.hero h1 {
+  margin-bottom: 20px;
+  color: var(--primary-dark);
+}
+
+.hero p {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+  line-height: 1.75;
+  max-width: 500px;
+}
+
+.hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(42, 95, 82, 0.1);
+}
+
+.hero-stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.hero-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Directions ── */
+.directions { background: var(--white); }
+
+.directions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.direction-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+}
+
+.direction-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: rgba(42, 95, 82, 0.08);
+  transform: translateY(-3px);
+}
+
+.direction-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+}
+
+.direction-card h3 { margin-bottom: 8px; }
+
+.direction-card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Doctors ── */
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.doctor-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.doctor-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.doctor-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.doctor-info { flex: 1; }
+.doctor-info h3 { margin-bottom: 4px; font-size: 1.05rem; }
+
+.doctor-spec {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.doctor-detail {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Appointment Form ── */
+.appointment {
+  background: var(--white);
+}
+
+.form-wrapper {
+  max-width: 600px;
+  margin: 40px auto 0;
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 40px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1.5px solid rgba(42, 95, 82, 0.12);
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(42, 95, 82, 0.08);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: #D9534F;
+  box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.08);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.error-text {
+  font-size: 0.78rem;
+  color: #D9534F;
+  margin-top: 4px;
+  display: none;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-submit {
+  margin-top: 8px;
+}
+
+.form-submit .btn { width: 100%; padding: 16px; font-size: 1rem; }
+
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.form-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 20px;
+}
+
+.form-success h3 {
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.form-success p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Footer ── */
+.footer {
+  background: var(--primary-dark);
+  color: rgba(255,255,255,0.7);
+  padding: 48px 0 32px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.footer-brand .logo-text {
+  color: white;
+  font-size: 1.4rem;
+}
+
+.footer-brand p {
+  margin-top: 8px;
+  font-size: 0.88rem;
+  max-width: 280px;
+  line-height: 1.6;
+}
+
+.footer-contacts h4 {
+  font-family: 'Nunito', sans-serif;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.footer-contacts a {
+  display: block;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.footer-contacts a:hover { color: white; }
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  section { padding: 56px 0; }
+
+  nav { display: none; }
+  nav.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    padding: 16px 24px 24px;
+    border-bottom: 1px solid rgba(42, 95, 82, 0.08);
+    gap: 16px;
+  }
+
+  .burger { display: flex; }
+  .burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  .hero { padding: 120px 0 60px; }
+
+  .hero-stats {
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat-value { font-size: 1.6rem; }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-wrapper { padding: 28px 20px; }
+
+  .directions-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .direction-card { padding: 20px 16px; }
+
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .directions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-buttons { flex-direction: column; }
+  .hero-buttons .btn { width: 100%; text-align: center; }
+}
+
+/* ── Disclaimer ── */
+.disclaimer {
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin-top: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.disclaimer p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.disclaimer strong {
+  color: var(--text);
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">Н</div>
+      <span class="logo-text">НоваМед</span>
+    </a>
+    <nav id="nav">
+      <a href="#directions">Направления</a>
+      <a href="#doctors">Врачи</a>
+      <a href="#appointment">Записаться</a>
+      <a href="#appointment" class="btn btn-primary btn-header">Запись онлайн</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="section-eyebrow">Частная клиника</p>
+      <h1>Забота о здоровье начинается до приёма</h1>
+      <p>Запишитесь онлайн — и к моменту визита врач уже будет знать вашу историю. Без очередей, без повторных вопросов.</p>
+      <div class="hero-buttons">
+        <a href="#appointment" class="btn btn-primary">Записаться на приём</a>
+        <a href="#directions" class="btn btn-outline">Наши направления</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-value">7</div>
+          <div class="hero-stat-label">направлений</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">12</div>
+          <div class="hero-stat-label">врачей</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">4 200+</div>
+          <div class="hero-stat-label">пациентов в год</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Directions ── -->
+<section class="directions" id="directions">
+  <div class="container">
+    <p class="section-eyebrow">Направления</p>
+    <h2>Полный спектр специалистов</h2>
+    <p class="section-subtitle">Подберём нужного врача и подготовим вас к визиту — вы получите рекомендации по анализам заранее.</p>
+    <div class="directions-grid">
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #EBF3F0; color: #2A5F52;">🫀</div>
+        <h3>Кардиология</h3>
+        <p>Диагностика и лечение заболеваний сердца. ЭКГ, холтер, УЗИ сердца.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #EDE9F6; color: #5B4D9E;">🧠</div>
+        <h3>Неврология</h3>
+        <p>Головные боли, нарушения сна, боли в спине. Комплексная диагностика.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #FEF3E2; color: #B8860B;">🔬</div>
+        <h3>Гастроэнтерология</h3>
+        <p>Заболевания ЖКТ, печени, поджелудочной. Гастроскопия, УЗИ.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #E8F4F8; color: #2980B9;">🦴</div>
+        <h3>Ортопедия</h3>
+        <p>Боли в суставах, травмы, реабилитация. Рентген, МРТ.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #FDE8E8; color: #C0392B;">🩺</div>
+        <h3>Дерматология</h3>
+        <p>Кожные заболевания, аллергии, дерматоскопия. Приём взрослых и детей.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #E8F8F0; color: #27AE60;">👶</div>
+        <h3>Педиатрия</h3>
+        <p>Наблюдение детей с рождения. Профилактика, вакцинация, осмотры.</p>
+      </div>
+      <div class="direction-card">
+        <div class="direction-icon" style="background: #F5EDE3; color: #8B6914;">💊</div>
+        <h3>Терапия</h3>
+        <p>Первичный приём, диспансеризация, направления к узким специалистам.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Doctors ── -->
+<section class="doctors" id="doctors">
+  <div class="container">
+    <p class="section-eyebrow">Команда</p>
+    <h2>Врачи, которым доверяют</h2>
+    <p class="section-subtitle">Каждый специалист — с подтверждённым опытом и индивидуальным подходом к пациенту.</p>
+    <div class="doctors-grid">
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #2A5F52;">ЕМ</div>
+        <div class="doctor-info">
+          <h3>Елена Морозова</h3>
+          <div class="doctor-spec">Терапевт</div>
+          <div class="doctor-detail">Стаж 14 лет · Первичный приём, диспансеризация, ведение хронических пациентов</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #5B4D9E;">АВ</div>
+        <div class="doctor-info">
+          <h3>Андрей Волков</h3>
+          <div class="doctor-spec">Кардиолог</div>
+          <div class="doctor-detail">Стаж 18 лет · ЭКГ, холтер, функциональная диагностика</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #B8860B;">ИС</div>
+        <div class="doctor-info">
+          <h3>Ирина Соколова</h3>
+          <div class="doctor-spec">Невролог</div>
+          <div class="doctor-detail">Стаж 11 лет · Мигрени, вертеброневрология, нарушения сна</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #2980B9;">ДП</div>
+        <div class="doctor-info">
+          <h3>Дмитрий Петров</h3>
+          <div class="doctor-spec">Гастроэнтеролог</div>
+          <div class="doctor-detail">Стаж 9 лет · Гастроскопия, заболевания печени и ЖКТ</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #C0392B;">НК</div>
+        <div class="doctor-info">
+          <h3>Наталья Козлова</h3>
+          <div class="doctor-spec">Ортопед</div>
+          <div class="doctor-detail">Стаж 12 лет · Суставы, травмы, спортивная медицина</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #27AE60;">МЛ</div>
+        <div class="doctor-info">
+          <h3>Марина Лебедева</h3>
+          <div class="doctor-spec">Дерматолог</div>
+          <div class="doctor-detail">Стаж 8 лет · Дерматоскопия, аллергология, косметология</div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background: #8B6914;">ОН</div>
+        <div class="doctor-info">
+          <h3>Ольга Новикова</h3>
+          <div class="doctor-spec">Педиатр</div>
+          <div class="doctor-detail">Стаж 16 лет · Наблюдение с рождения, вакцинация, развитие</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Appointment ── -->
+<section class="appointment" id="appointment">
+  <div class="container">
+    <div style="text-align:center;">
+      <p class="section-eyebrow">Запись на приём</p>
+      <h2>Запишитесь онлайн за 1 минуту</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">Оставьте заявку — администратор свяжется с вами для подтверждения времени.</p>
+    </div>
+
+    <div class="form-wrapper">
+      <form id="appointmentForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Имя *</label>
+            <input type="text" id="name" placeholder="Ваше имя" required>
+            <div class="error-text" id="nameError">Укажите имя</div>
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон *</label>
+            <input type="tel" id="phone" placeholder="+7 (___) ___-__-__" required>
+            <div class="error-text" id="phoneError">Укажите номер телефона</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="email@example.com">
+          <div class="error-text" id="emailError">Некорректный email</div>
+        </div>
+        <div class="form-group">
+          <label for="direction">Направление *</label>
+          <select id="direction" required>
+            <option value="" disabled selected>Выберите направление</option>
+            <option value="Терапия">Терапия</option>
+            <option value="Кардиология">Кардиология</option>
+            <option value="Неврология">Неврология</option>
+            <option value="Гастроэнтерология">Гастроэнтерология</option>
+            <option value="Ортопедия">Ортопедия</option>
+            <option value="Дерматология">Дерматология</option>
+            <option value="Педиатрия">Педиатрия</option>
+          </select>
+          <div class="error-text" id="directionError">Выберите направление</div>
+        </div>
+        <div class="form-group">
+          <label for="comment">Комментарий</label>
+          <textarea id="comment" placeholder="Кратко опишите причину визита (необязательно)"></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn btn-primary">Отправить заявку</button>
+        </div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">✓</div>
+        <h3>Заявка отправлена</h3>
+        <p>Администратор свяжется с вами в течение 30 минут для подтверждения записи.</p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <p><strong>Обратите внимание:</strong> онлайн-запись не является подтверждением приёма. Администратор свяжется с вами для уточнения времени. В экстренных случаях звоните 103.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-text">НоваМед</div>
+        <p>Частная клиника с полным спектром медицинских направлений и индивидуальным подходом к каждому пациенту.</p>
+      </div>
+      <div class="footer-contacts">
+        <h4>Контакты</h4>
+        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+        <a href="mailto:info@novamed-clinic.ru">info@novamed-clinic.ru</a>
+        <a href="#">г. Москва, ул. Примерная, 12</a>
+      </div>
+      <div class="footer-contacts">
+        <h4>Часы работы</h4>
+        <a href="#">Пн — Пт: 8:00 — 20:00</a>
+        <a href="#">Сб: 9:00 — 16:00</a>
+        <a href="#">Вс: выходной</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 НоваМед. Demo-проект. Клиника вымышлена.
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Header scroll effect ──
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ── Mobile menu ──
+const burger = document.getElementById('burger');
+const nav = document.getElementById('nav');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+});
+
+nav.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    burger.classList.remove('open');
+    nav.classList.remove('open');
+  });
+});
+
+// ── Phone mask ──
+const phoneInput = document.getElementById('phone');
+phoneInput.addEventListener('input', function(e) {
+  let val = this.value.replace(/\D/g, '');
+  if (val.startsWith('8')) val = '7' + val.slice(1);
+  if (val.startsWith('7')) {
+    let formatted = '+7';
+    if (val.length > 1) formatted += ' (' + val.slice(1, 4);
+    if (val.length > 4) formatted += ') ' + val.slice(4, 7);
+    if (val.length > 7) formatted += '-' + val.slice(7, 9);
+    if (val.length > 9) formatted += '-' + val.slice(9, 11);
+    this.value = formatted;
+  } else if (val.length > 0) {
+    this.value = '+' + val;
+  }
+});
+
+// ── Form validation ──
+const form = document.getElementById('appointmentForm');
+const formSuccess = document.getElementById('formSuccess');
+
+function showError(inputId, errorId) {
+  document.getElementById(inputId).classList.add('error');
+  document.getElementById(errorId).style.display = 'block';
+}
+
+function clearError(inputId, errorId) {
+  document.getElementById(inputId).classList.remove('error');
+  document.getElementById(errorId).style.display = 'none';
+}
+
+// Clear errors on input
+['name', 'phone', 'email', 'direction'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => clearError(id, id + 'Error'));
+  el.addEventListener('change', () => clearError(id, id + 'Error'));
+});
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.replace(/\D/g, '');
+  const email = document.getElementById('email').value.trim();
+  const direction = document.getElementById('direction').value;
+
+  if (!name) { showError('name', 'nameError'); valid = false; }
+  if (phone.length < 11) { showError('phone', 'phoneError'); valid = false; }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email', 'emailError'); valid = false; }
+  if (!direction) { showError('direction', 'directionError'); valid = false; }
+
+  if (!valid) return;
+
+  // Collect data (ready for Google Apps Script fetch in session 2)
+  const data = {
+    name: name,
+    phone: document.getElementById('phone').value,
+    email: email,
+    direction: direction,
+    comment: document.getElementById('comment').value.trim(),
+    timestamp: new Date().toISOString()
+  };
+
+  console.log('Form data:', data);
+
+  // TODO: fetch() to Google Apps Script URL
+  // fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
+
+  // Show success
+  form.style.display = 'none';
+  formSuccess.style.display = 'block';
+});
+</script>
+
+</body>
+</html>
