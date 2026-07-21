@@ -951,17 +951,19 @@ form.addEventListener('submit', function(e) {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Отправка...';
 
-  fetch('https://script.google.com/macros/s/AKfycbyba_umqfU9qACxwcFQtqX3epJBmyPXkjlFptkEDUBCPlI2vL4KPMAR1lNl7HNKVxgnHA/exec', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(result) {
+  var scriptUrl = 'https://script.google.com/macros/s/AKfycbyba_umqfU9qACxwcFQtqX3epJBmyPXkjlFptkEDUBCPlI2vL4KPMAR1lNl7HNKVxgnHA/exec';
+  var params = '?name=' + encodeURIComponent(data.name)
+    + '&phone=' + encodeURIComponent(data.phone)
+    + '&email=' + encodeURIComponent(data.email)
+    + '&direction=' + encodeURIComponent(data.direction)
+    + '&comment=' + encodeURIComponent(data.comment);
+
+  fetch(scriptUrl + params, { mode: 'no-cors' })
+  .then(function() {
     form.style.display = 'none';
     formSuccess.style.display = 'block';
   })
-  .catch(function(err) {
-    // Даже при CORS-ошибке Google Apps Script обрабатывает запрос
+  .catch(function() {
     form.style.display = 'none';
     formSuccess.style.display = 'block';
   });
